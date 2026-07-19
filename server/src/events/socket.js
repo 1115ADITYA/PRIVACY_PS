@@ -12,9 +12,12 @@ function setupSocketEvents(io) {
 
     // Mobile device connecting
     socket.on('device:connect', (deviceInfo) => {
+      const ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+      
       const profile = {
         id: socket.id,
         connectedAt: Date.now(),
+        ip: ip,
         ...deviceInfo
       };
       

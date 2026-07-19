@@ -29,13 +29,23 @@ export default function ProfileCard({ device, index }) {
 
       <div className="flex-1 overflow-hidden">
         <div className="flex justify-between items-center mb-1">
-          <h3 className="font-mono text-xs text-white/50 truncate">ID: {device.id.slice(0, 8)}</h3>
+          <h3 className="font-mono text-xs text-white/70 truncate">ID: {device.id.slice(0, 8)}</h3>
           <span className="text-[10px] text-white/30 font-mono">
             {new Date(device.connectedAt).toLocaleTimeString()}
           </span>
         </div>
-        <div className="text-sm text-white/90 truncate font-sans">
+        <div className="text-xs text-white/90 truncate font-sans font-semibold">
           {device.platform} • {device.screenSize}
+        </div>
+        
+        {/* Advanced Data */}
+        <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[9px] font-mono text-white/50">
+          <div className="truncate">IP: <span className="text-accent">{device.ip || 'Hidden'}</span></div>
+          <div className="truncate">NET: <span className="text-white/70">{device.network}</span></div>
+          <div className="truncate">BAT: <span className="text-white/70">{device.battery}</span></div>
+          <div className="truncate">CPU: <span className="text-white/70">{device.cores}</span></div>
+          <div className="truncate">MEM: <span className="text-white/70">{device.ram}</span></div>
+          <div className="truncate">LNG: <span className="text-white/70">{device.language}</span></div>
         </div>
       </div>
     </motion.div>

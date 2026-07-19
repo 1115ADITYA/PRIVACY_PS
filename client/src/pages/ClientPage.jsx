@@ -11,15 +11,33 @@ export default function ClientPage() {
   useEffect(() => {
     socket.connect();
 
-    const getDeviceInfo = () => ({
-      userAgent: navigator.userAgent,
-      platform: navigator.platform,
-      screenSize: `${window.innerWidth}x${window.innerHeight}`,
-    });
+    const getDeviceInfo = async () => {
+      let batteryInfo = 'Unknown';
+      if (navigator.getBattery) {
+        try {
+          const battery = await navigator.getBattery();
+          batteryInfo = `${Math.round(battery.level * 100)}% ${battery.charging ? '⚡' : ''}`;
+        } catch (e) {}
+      }
 
-    socket.on('connect', () => {
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const networkType = connection ? connection.effectiveType : 'Unknown';
+
+      return {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        screenSize: `${window.innerWidth}x${window.innerHeight}`,
+        battery: batteryInfo,
+        network: networkType,
+        cores: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : 'Unknown',
+        ram: navigator.deviceMemory ? `${navigator.deviceMemory}GB RAM` : 'Unknown',
+        language: navigator.language
+      };
+    };
+
+    socket.on('connect', async () => {
       setStatus('Welcome to ANTIGRAVITY');
-      socket.emit('device:connect', getDeviceInfo());
+      socket.emit('device:connect', await getDeviceInfo());
     });
 
     socket.on('presentation:state_change', (newState) => {
