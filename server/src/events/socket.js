@@ -42,6 +42,8 @@ function setupSocketEvents(io) {
       
       if (newState === 'ACT_3') {
         io.emit('presentation:command', 'ERASING');
+      } else {
+        io.emit('presentation:command', null);
       }
     });
 
